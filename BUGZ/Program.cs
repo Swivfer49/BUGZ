@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BUGZ.LAYER_DATACCESS;
+using BUGZ.LAYER_DOMAN;
+
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("AppDBContextConnection") ?? throw new InvalidOperationException("Connection string 'AppDBContextConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'AppDBContextConnection' not found.");
 
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlServer(connectionString));
