@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BUGZ", "BUGZ\BUGZ.csproj", "{53123F3A-7E76-4693-85C8-C17986BD027C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BUGZ.Tests", "BUGZ.Tests\BUGZ.Tests.csproj", "{95070C81-51A3-4B09-84C3-F0F43C21B670}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{53123F3A-7E76-4693-85C8-C17986BD027C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53123F3A-7E76-4693-85C8-C17986BD027C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53123F3A-7E76-4693-85C8-C17986BD027C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95070C81-51A3-4B09-84C3-F0F43C21B670}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95070C81-51A3-4B09-84C3-F0F43C21B670}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95070C81-51A3-4B09-84C3-F0F43C21B670}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95070C81-51A3-4B09-84C3-F0F43C21B670}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

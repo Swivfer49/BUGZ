@@ -31,7 +31,8 @@ namespace BUGZ.LAYER_DOMAN
             // If is abmin, is abmin
 
             if (
-                context.User.IsInRole(Contants.AbminRole)
+                context.User.IsInRole(Contants.AbminRole) && 
+                (requirement.Name != Contants.CreateTicketName)
                 )
             {
                 context.Succeed(requirement);
@@ -49,10 +50,10 @@ namespace BUGZ.LAYER_DOMAN
            : AuthorizationHandler<OperationAuthorizationRequirement, Ticket>
     {
         UserManager<AppUser> _userManager;
-        AppDBContext _appDBContext;
+        IDataccess _appDBContext;
 
         public PMTicketAuthorizationHandler(UserManager<AppUser>
-            userManager, AppDBContext appDBContext)
+            userManager, IDataccess appDBContext)
         {
             _userManager = userManager;
             _appDBContext = appDBContext;
@@ -78,10 +79,6 @@ namespace BUGZ.LAYER_DOMAN
             switch (requirement.Name)
             {
                 //yes
-                case Contants.CreateProjectName:
-                case Contants.EditProjectDetailsName:
-                case Contants.AssignToProjectName:
-                case Contants.ArchiveProjectName:
                 case Contants.EditTicketStatusName:
                     context.Succeed(requirement);
                     break;
@@ -96,7 +93,7 @@ namespace BUGZ.LAYER_DOMAN
                 case Contants.AddAttachmentName:
                 case Contants.ViewHistoryName:
                 case Contants.EditTicketPriorityName:
-                    if (_appDBContext.ProjectUsers.Any(pu => (pu.ProjectId == resource.ProjectId && pu.UserId == _userManager.GetUserId(context.User))))
+                    if (((IRepository<ProjectUser>)_appDBContext).GetAll().Any(pu => (pu.ProjectId == resource.ProjectId && pu.UserId == _userManager.GetUserId(context.User))))
                     {
                         context.Succeed(requirement);
                     }
@@ -137,12 +134,52 @@ namespace BUGZ.LAYER_DOMAN
                 return Task.CompletedTask;
             }
 
-            if (requirement.Name == Contants.ManagersRole)
+            if (requirement.Name == Contants.AssignToTicketName)
             {
                 if (_userManager.IsInRoleAsync(resource, Contants.DeveloperRole).Result)
                 {
                     context.Succeed(requirement);
                 }
+            }
+
+            return Task.CompletedTask;
+        }
+    }
+
+    public class PMProjectAuthorizationHandler
+           : AuthorizationHandler<OperationAuthorizationRequirement, Project>
+    {
+        UserManager<AppUser> _userManager;
+
+        public PMProjectAuthorizationHandler(UserManager<AppUser>
+            userManager)
+        {
+            _userManager = userManager;
+        }
+
+        protected override Task
+            HandleRequirementAsync(AuthorizationHandlerContext context,
+                                   OperationAuthorizationRequirement requirement,
+                                   Project resource)
+        {
+            if (context.User == null || resource == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            if (
+                !context.User.IsInRole(Contants.ManagersRole)
+                )
+            {
+                return Task.CompletedTask;
+            }
+
+            if (requirement.Name == Contants.CreateProjectName || 
+                requirement.Name == Contants.ViewProjectName ||
+                requirement.Name == Contants.ArchiveProjectName || 
+                requirement.Name == Contants.EditProjectDetailsName)
+            {
+                context.Succeed(requirement);
             }
 
             return Task.CompletedTask;
@@ -187,13 +224,6 @@ namespace BUGZ.LAYER_DOMAN
 
             switch (requirement.Name)
             {
-                case Contants.ViewProjectName:
-                case Contants.EditCommentName:
-                case Contants.EditAttachmentName:
-                case Contants.DeleteAttachmentName:
-                case Contants.DeleteCommentName:
-                    return Task.CompletedTask;
-                    break;
                 case Contants.EditTicketPriorityName:
                 case Contants.EditTicketStatusName:
                 case Contants.ViewTicketDetailsName:
@@ -204,13 +234,6 @@ namespace BUGZ.LAYER_DOMAN
                     {
                         context.Succeed(requirement);
                     }
-                    else
-                    {
-                        context.Fail();
-                    }
-                    break;
-                default:
-                    context.Fail();
                     break;
             }
 
@@ -220,10 +243,10 @@ namespace BUGZ.LAYER_DOMAN
     public class DeveloperProjectAuthorizationHandler
            : AuthorizationHandler<OperationAuthorizationRequirement, Project>
     {
-        AppDBContext _appDBContext;
+        IDataccess _appDBContext;
         UserManager<AppUser> _userManager;
 
-        public DeveloperProjectAuthorizationHandler(UserManager<AppUser> userManager, AppDBContext appDBContext)
+        public DeveloperProjectAuthorizationHandler(UserManager<AppUser> userManager, IDataccess appDBContext)
         {
             _userManager = userManager;
             _appDBContext = appDBContext;
@@ -249,7 +272,7 @@ namespace BUGZ.LAYER_DOMAN
             switch (requirement.Name)
             {
                 case Contants.ViewProjectName:
-                    if (_appDBContext.ProjectUsers.Any(pu => pu.UserId == _userManager.GetUserId(context.User) && pu.ProjectId == resource.Id))
+                    if (((IRepository<ProjectUser>)_appDBContext).GetAll().Any(pu => pu.UserId == _userManager.GetUserId(context.User) && pu.ProjectId == resource.Id))
                     {
                         context.Succeed(requirement);
                     }
@@ -315,10 +338,10 @@ namespace BUGZ.LAYER_DOMAN
     public class SubProjectAuthorizationHandler
            : AuthorizationHandler<OperationAuthorizationRequirement, Project>
     {
-        AppDBContext _appDBContext;
+        IDataccess _appDBContext;
         UserManager<AppUser> _userManager;
 
-        public SubProjectAuthorizationHandler(UserManager<AppUser> userManager, AppDBContext appDBContext)
+        public SubProjectAuthorizationHandler(UserManager<AppUser> userManager, IDataccess appDBContext)
         {
             _userManager = userManager;
             _appDBContext = appDBContext;
@@ -345,7 +368,7 @@ namespace BUGZ.LAYER_DOMAN
             {
                 case Contants.ViewProjectName:
                 case Contants.CreateTicketName:
-                    if (_appDBContext.ProjectUsers.Any(pu => pu.UserId == _userManager.GetUserId(context.User) && pu.ProjectId == resource.Id))
+                    if (((IRepository<ProjectUser>)_appDBContext).GetAll().Any(pu => pu.UserId == _userManager.GetUserId(context.User) && pu.ProjectId == resource.Id))
                     {
                         context.Succeed(requirement);
                     }

@@ -55,6 +55,8 @@ builder.Services.AddScoped<IAuthorizationHandler,
                       AverageCommentAuthorizationHandler>();
 #endregion
 
+builder.Services.AddScoped<IDataccess, AppDBContext>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
