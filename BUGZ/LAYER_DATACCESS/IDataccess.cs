@@ -15,6 +15,8 @@ namespace BUGZ.LAYER_DATACCESS
         IRepository<TicketStatus>,
         IRepository<TicketType>
     {
+        public Ticket GetFullTicket(Guid id);
 
+        public IEnumerable<Ticket> GetMyTickets(string userId);
     }
 }

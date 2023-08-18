@@ -511,5 +511,41 @@ namespace BUGZ.LAYER_DATACCESS
         }
 
         #endregion
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Ticket>()
+                .HasOne(t => t.AssignedUser)
+                .WithMany(a => a.AssignedTickets)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.NoAction);
+                
+        }
+
+        public Ticket GetFullTicket(Guid id)
+        {
+            Ticket Result = Tickets
+                .Include(t => t.TicketType)
+                .Include(t => t.TicketPriority)
+                .Include(t => t.TicketStatus)
+                .Include(t => t.Project)
+                .FirstOrDefault(t=>t.Id == id);
+            if (Result == null) throw new ArgumentException();
+            return JsonConvert.DeserializeObject<Ticket>(JsonConvert.SerializeObject(Result))!;
+        }
+
+        public IEnumerable<Ticket> GetMyTickets(string userId)
+        {
+            IEnumerable<Ticket> Result = Tickets
+                .Include(t => t.TicketType)
+                .Include(t => t.TicketPriority)
+                .Include(t => t.TicketStatus)
+                .Include(t => t.Project)
+                .Where(t=>t.OwnerUserId == userId || t.AssignedUserId == userId)
+                .ToArray()
+                .Select(u => JsonConvert.DeserializeObject<Ticket>(JsonConvert.SerializeObject(u))!); 
+            return Result;
+        }
     }
 }

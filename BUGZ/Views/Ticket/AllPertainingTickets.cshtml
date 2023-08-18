@@ -1,0 +1,17 @@
+﻿@model IEnumerable<ViewModelTicketPassIn>
+
+
+@foreach(var t in Model)
+{
+    <div>
+        <h2>@t.Title</h2>
+        <p>@t.Description</p>
+        <p>Type: @t.Type</p>
+        <p>Status: @t.Status</p>
+        <p>Project: @t.Project</p>
+        <p>Priority: @t.Priority</p>
+        <p>Created: @t.Created</p>
+        <p>Updated: @t.Updated</p>
+    </div>
+    
+}

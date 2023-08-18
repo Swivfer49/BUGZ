@@ -634,6 +634,7 @@ namespace BUGZ.LAYER_DOMAN.Tests
         {
             var fakeManagerOfTheUsers = IWantToSpeakToYourManager();
             var fakeC = GiveMeSomeContext();
+            //hey alex, tell me if you see this :)
 
             fakeManagerOfTheUsers.Setup(um => um.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns("7");
             var reggie = MakeRequirements(
@@ -657,12 +658,7 @@ namespace BUGZ.LAYER_DOMAN.Tests
 
         }
 
-
-
-
-
-
-
+        
 
         #region Help, aahhhhhh!
 

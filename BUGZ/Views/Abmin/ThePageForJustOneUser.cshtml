@@ -1,0 +1,20 @@
+﻿@model ViewModelForAbminViewOneUser
+
+
+<h2>Select desired roles for: @Model.Name</h2>
+
+<form method="post">
+    @foreach(string s in Model.UserRoles)
+    {
+        <label for="@s">@s</label>
+        <input type="checkbox" checked="true" name="UserRoles" id="@s" value="@s"/>
+    }
+    @foreach (string s in Model.OtherRoles)
+    {
+        <label for="@s">@s</label>
+        <input type="checkbox" name="UserRoles" id="@s" value="@s" />
+    }
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <input type="hidden" name="Name" value="@Model.Name" />
+    <button type="submit">subscrebe</button>
+</form>

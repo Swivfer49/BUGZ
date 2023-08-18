@@ -1,0 +1,20 @@
+﻿
+@using BUGZ.LAYER_DOMAN
+@model ViewModelForTheAbminWhenViewingAllUsers
+
+
+<div class="center">
+    <ul>
+        @foreach(var user in Model.UserBundles)
+        {
+            <li>
+                <h2>@user.Name</h2>
+                @foreach(string s in user.Roles)
+                {
+                    <p>@s</p>
+                }
+                <a asp-action="thepageforjustoneuser" asp-route-id="@user.Id">Change Role</a>
+            </li>
+        }
+    </ul>
+</div>

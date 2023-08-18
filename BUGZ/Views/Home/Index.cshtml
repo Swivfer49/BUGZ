@@ -1,8 +1,21 @@
-﻿@{
+﻿@using BUGZ.LAYER_DOMAN
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if (User.IsInRole(Contants.AbminRole))
+    {
+        <a asp-controller="abmin" asp-action="index">Abmin</a>
+    }
+    @if (User.IsInRole(Contants.AnyoneRole))
+    {
+        <a asp-controller="sub" asp-action="index">Sub sandwick</a>
+    }
+    @if (User.IsInRole(Contants.DeveloperRole) || User.IsInRole(Contants.AnyoneRole))
+    {
+        <a asp-controller="ticket" asp-action="index">Tix</a>
+    }
 </div>

@@ -23,6 +23,13 @@ namespace BUGZ.LAYER_DATACCESS
                 var managerID = await EnsureUser(serviceProvider, testUserPw, "manager@dbdb.com");
                 await EnsureRole(serviceProvider, managerID, Contants.ManagersRole);
 
+                var devID = await EnsureUser(serviceProvider, testUserPw, "daniel@dbdb.com");
+                await EnsureRole(serviceProvider, devID, Contants.DeveloperRole);
+
+                // allowed user can create and edit contacts that they create
+                var subID = await EnsureUser(serviceProvider, testUserPw, "herbert.mcgee@dbdb.com");
+                await EnsureRole(serviceProvider, subID, Contants.AnyoneRole);
+
                 SeedDB(context, adminID);
             }
         }
@@ -86,9 +93,100 @@ namespace BUGZ.LAYER_DATACCESS
             return IR;
         }
 
-        public static void SeedDB(AppDBContext context, string adminID)
+        public static void SeedDB(IDataccess context, string adminID)
         {
-            
+            if (!HasAnyInBox<TicketPriority>(context))
+            {
+                TicketPriority lowPri = new TicketPriority()
+                {
+                    Name = "Low"
+                };
+                TicketPriority highPri = new TicketPriority()
+                {
+                    Name = "Hight"
+                };
+                TicketPriority medPri = new TicketPriority()
+                {
+                    Name = "Medium"
+                };
+
+                HelpPutInTheBox(context, lowPri, highPri, medPri);
+            }
+
+            if (!HasAnyInBox<Project>(context))
+            {
+                Project proGeraldMan = new Project()
+                {
+                    Name = "GeraldMan, destroyer of worlds"
+                };
+                Project proMTShovel = new Project()
+                {
+                    Name = "Upside-down Mountain Shovel"
+                };
+
+                HelpPutInTheBox(context, proGeraldMan, proMTShovel);
+            }
+
+            if (!HasAnyInBox<TicketType>(context))
+            {
+                TicketType typeCrash = new TicketType()
+                {
+                    Name = "Crash"
+                };
+                TicketType typeVisual = new TicketType()
+                {
+                    Name = "Visual Glitch"
+                };
+                TicketType typeComplaint = new TicketType()
+                {
+                    Name = "Complaint"
+                };
+                TicketType typeExploit = new TicketType()
+                {
+                    Name = "Unfair Exploit"
+                };
+
+                HelpPutInTheBox(context, typeComplaint, typeCrash, typeExploit, typeVisual);
+            }
+
+            if (!HasAnyInBox<TicketStatus>(context))
+            {
+                TicketStatus statSubmit = new TicketStatus()
+                {
+                    Name = "Recently Submitted"
+                };
+                TicketStatus statReviewed = new TicketStatus()
+                {
+                    Name = "Reviewed"
+                };
+                TicketStatus statOngoing = new TicketStatus()
+                {
+                    Name = "Ongoing"
+                };
+                TicketStatus statAwaiting = new TicketStatus()
+                {
+                    Name = "Needs More Information"
+                };
+                TicketStatus statDone = new TicketStatus()
+                {
+                    Name = "Closed"
+                };
+
+                HelpPutInTheBox(context, statSubmit, statReviewed, statOngoing, statDone, statAwaiting);
+            }
+        }
+
+        private static void HelpPutInTheBox<T>(IRepository<T> db, params T[] items) where T : class
+        {
+            foreach (T item in items)
+            {
+                db.Insert(item);
+            }
+        }
+
+        private static bool HasAnyInBox<T>(IRepository<T> db) where T : class
+        {
+            return (db.GetAll().Count() != 0);
         }
     }
 }

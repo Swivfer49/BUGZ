@@ -1,0 +1,29 @@
+﻿@model ViewModelMakeTicket
+
+<form method="post">
+    <label for="title">Title</label>
+    <input type="text" name="Title" id="title" />
+    <label for="description">Description</label>
+    <input type="text" name="Description" id="description" />
+    <select name="ProjectId">
+        @foreach(var p in Model.projects)
+        {
+            <option value="@p.Id">@p.Name</option>
+        }
+    </select>
+    <select name="ProirityId">
+        @foreach(var p in Model.ticketPriority)
+        {
+            <option value="@p.Id">@p.Name</option>
+        }
+    </select>
+    <select name="TypeId">
+        @foreach (var p in Model.ticketTypes)
+        {
+            <option value="@p.Id">@p.Name</option>
+        }
+    </select>
+
+
+    <button type="submit" class="btn-danger">Subscrebe</button>
+</form>

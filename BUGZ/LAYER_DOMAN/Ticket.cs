@@ -12,6 +12,15 @@
         public Guid TicketPriorityId { get; set; }
         public Guid TicketStatusId { get; set; }
         public string OwnerUserId { get; set; }
-        public string AssignedUserId { get; set; }
+        public string? AssignedUserId { get; set; }
+
+        // Navigation properties
+        public virtual AppUser OwnerUser { get; set; }
+        public virtual AppUser AssignedUser { get; set; }
+        public virtual TicketType TicketType { get; set; }
+        public virtual TicketPriority TicketPriority { get; set; }
+        public virtual TicketStatus TicketStatus { get; set; }
+        public virtual Project Project { get; set; }
+        
     }
 }
